@@ -14,11 +14,16 @@ public class ScoreManager : MonoBehaviour {
     //sometimes it's just easier to set a reference to another object by dragging it into a public variable in the inspector
     public TextMesh scoreText; //reference to the 3D score text object, set in the inspector
     public AudioSource audioSource; //reference to audio source on the score object
-    public AudioClip caughtSound; //sound we'll use for catched hats
-    public AudioClip missedSound; //sould we'll use for missed hats
+    public AudioClip caughtSound; //sound we'll use for caught hats
+    public AudioClip missedSound; //sound we'll use for missed hats
+    public GameObject FailOne;
+    public GameObject FailTwo;
+    public GameObject FailThree;
 
     //private variables have to be set in code
     private int score;
+
+    private int HatsMissed = 0;
 
     //Start is called at game start, sets the score to 0
     void Start () {
@@ -48,8 +53,29 @@ public class ScoreManager : MonoBehaviour {
     //This is called by the Hat script on each Hat, using SendMessage("HatMissed")
     public void HatMissed()
     {
-        Debug.Log("player missed a hat"); //Print a useful message in the debug console
+        //Debug.Log("player missed a hat"); //Print a useful message in the debug console
+        HatsMissed++;
+        UpdateFailCounter();
         score -= 1;
         audioSource.PlayOneShot(missedSound); //play the missed sound
+    }
+
+    public void UpdateFailCounter()
+    {
+        switch(HatsMissed)
+        {
+            case 1:
+                FailOne.SetActive(true);
+                break;
+            case 2:
+                FailTwo.SetActive(true);
+                break;
+            case 3:
+                FailThree.SetActive(true);
+                //TODO end game, disable player input, disable hatspawner, show game over
+                break;
+            default:
+                break;
+        }
     }
 }

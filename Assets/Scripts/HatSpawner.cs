@@ -8,10 +8,13 @@ public class HatSpawner : MonoBehaviour {
     //public variables are accessible by other scripts, and are often set in the inspector
     //they're great for tunable variables, like these, since we can edit them in play mode.
     public GameObject hatPrefab;
+    public GameObject powerupPrefab;
     private int HatsSpawned = 0;
     public int SpeedUpThreshold = 5;
     public float speedUpRate = 0.1f; //rate number by which we decrease timeBetweenSpawns by
     public float timeBetweenSpawns; //interval of time to wait between spawn in seconds
+    public float minTimeBetweenSpawns = 0.4f; //minimum interval of time between spawn in seconds
+    public float powerUpFrequency = 0.08f; //frequency of the powerup to spawn, the greater the more frequent
    
     public float xSpawnPosMin; //left most spawn point
     public float xSpawnPosMax; //right most spawn point
@@ -37,7 +40,7 @@ public class HatSpawner : MonoBehaviour {
             HatsSpawned++;
             //then we reset timeUntilSpawn to the timeBetweenSpawns & start all over again
 
-            if(HatsSpawned == SpeedUpThreshold)
+            if(HatsSpawned == SpeedUpThreshold && timeBetweenSpawns > minTimeBetweenSpawns)
             {
                 timeBetweenSpawns -= speedUpRate;
                 HatsSpawned = 0;
@@ -56,7 +59,15 @@ public class HatSpawner : MonoBehaviour {
         Vector3 newPos = new Vector3(Random.Range(xSpawnPosMin, xSpawnPosMax), ySpawnPos, 0);
         //Instantiate creates a new object from a prefab. It needs the prefab, the position, and the rotation as arguements
         //newPos is the position we made, Quaternion.identity just means that we're not rotating the sprite
-        Instantiate(hatPrefab, newPos, Quaternion.identity);
+        if(Random.Range(0.0f, 10.0f) < powerUpFrequency)
+        {
+            Instantiate(powerupPrefab, newPos, Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(hatPrefab, newPos, Quaternion.identity);
+        }
+        
     }
 
  
