@@ -46,7 +46,7 @@ public class Hat : MonoBehaviour
 
         }
         //check to see if the colliding object had the tag 'Player'
-        if (otherCollider.tag == "Player")
+        if (otherCollider is BoxCollider2D && otherCollider.tag == "Player")
         {
             //Tell the scoreManager & player that the player missed a hat
             scoreManager.SendMessage("HatCaught");

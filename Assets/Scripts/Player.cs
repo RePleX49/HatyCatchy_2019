@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //This script is a simple player controller
 public class Player : MonoBehaviour {
@@ -12,11 +13,16 @@ public class Player : MonoBehaviour {
 
     public Sprite sadPlayerSprite;
     public Sprite happyPlayerSprite;
+    private List<Collider2D> ObjectsInRadius;
+    private ContactFilter2D contactFilter;
+    private CircleCollider2D MagnetCollider;
+    private int maxColliders = 15;
 
     public GameObject ClonePrefab;
     public Vector3 CloneOffset;
-
+    
     public bool bHasTriplePowerUp = false;
+    public bool bHasMagnetPowerUp = true;
 
     //private variables have to be set in code, like Phaser's global variables
     private SpriteRenderer sr;
@@ -25,6 +31,10 @@ public class Player : MonoBehaviour {
     {   
         //fill the SpriteRenderer variable with a reference to the SpriteRender on this GameObject
         sr = GetComponent<SpriteRenderer>();
+        MagnetCollider = GetComponent<CircleCollider2D>();
+
+        contactFilter = new ContactFilter2D();
+        ObjectsInRadius = new List<Collider2D>();
     }
 	
 	// Update is called once per frame
@@ -69,6 +79,25 @@ public class Player : MonoBehaviour {
         if (transform.position.x < leftEdge) {
             //remember we sadly can't set the x coordinate of a transform in C# directly... we have to give it a whole new Vector3
             transform.position = new Vector3(leftEdge, transform.position.y, 0);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if(bHasMagnetPowerUp)
+        {
+            int numberofoverlaps = MagnetCollider.OverlapCollider(contactFilter, ObjectsInRadius);
+            Debug.Log(numberofoverlaps);
+        }
+        foreach(Collider2D overlappingCollider in ObjectsInRadius)
+        {
+            //if(collider)
+            //{
+            //    Debug.Log("Collider Found");
+            //}
+             Vector3 ForceDirection = this.transform.position - overlappingCollider.gameObject.transform.position;
+             ForceDirection.Normalize();
+             overlappingCollider.gameObject.transform.position += ForceDirection * 3.0f;
         }
     }
 
