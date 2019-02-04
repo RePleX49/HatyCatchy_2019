@@ -9,6 +9,7 @@ public class HatSpawner : MonoBehaviour {
     //they're great for tunable variables, like these, since we can edit them in play mode.
     public GameObject hatPrefab;
     public GameObject powerupPrefab;
+    private GameObject player;
     private int HatsSpawned = 0;
     public int SpeedUpThreshold = 5;
     public float speedUpRate = 0.1f; //rate number by which we decrease timeBetweenSpawns by
@@ -25,6 +26,7 @@ public class HatSpawner : MonoBehaviour {
 
     public void Start()
     {
+        player = GameObject.Find("Player");
         timeUntilSpawn = 1;
     }
 
@@ -59,7 +61,8 @@ public class HatSpawner : MonoBehaviour {
         Vector3 newPos = new Vector3(Random.Range(xSpawnPosMin, xSpawnPosMax), ySpawnPos, 0);
         //Instantiate creates a new object from a prefab. It needs the prefab, the position, and the rotation as arguements
         //newPos is the position we made, Quaternion.identity just means that we're not rotating the sprite
-        if(Random.Range(0.0f, 10.0f) < powerUpFrequency)
+        //powerUpFrequency determines how often the powerup spawns
+        if(Random.Range(0.0f, 10.0f) < powerUpFrequency && !player.GetComponent<Player>().bHasTriplePowerUp)
         {
             Instantiate(powerupPrefab, newPos, Quaternion.identity);
         }

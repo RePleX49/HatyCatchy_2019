@@ -19,6 +19,9 @@ public class ScoreManager : MonoBehaviour {
     public GameObject FailOne;
     public GameObject FailTwo;
     public GameObject FailThree;
+    private GameObject player;
+    private GameObject hatSpawner;
+    private GameObject gameOverText;
 
     //private variables have to be set in code
     private int score;
@@ -27,6 +30,9 @@ public class ScoreManager : MonoBehaviour {
 
     //Start is called at game start, sets the score to 0
     void Start () {
+        player = GameObject.Find("Player");
+        hatSpawner = GameObject.Find("HatSpawner");
+        gameOverText = GameObject.Find("GameOverText");
         score = 0;
         audioSource = GetComponent<AudioSource>();
     }
@@ -56,7 +62,6 @@ public class ScoreManager : MonoBehaviour {
         //Debug.Log("player missed a hat"); //Print a useful message in the debug console
         HatsMissed++;
         UpdateFailCounter();
-        score -= 1;
         audioSource.PlayOneShot(missedSound); //play the missed sound
     }
 
@@ -73,6 +78,9 @@ public class ScoreManager : MonoBehaviour {
             case 3:
                 FailThree.SetActive(true);
                 //TODO end game, disable player input, disable hatspawner, show game over
+                player.SetActive(false);
+                hatSpawner.SetActive(false);
+                gameOverText.SetActive(true);
                 break;
             default:
                 break;

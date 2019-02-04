@@ -11,6 +11,7 @@ public class PlayerClone : MonoBehaviour
     //they're great for tunable variables because we can change them while the game is running
     public float moveSpeed; //we're not setting its value here, because we want to remember to set it in the inspector.
     public float PowerUpTime = 6.0f;
+    public float flashRate = 0.75f;
 
     public Sprite sadPlayerSprite;
     public Sprite happyPlayerSprite;
@@ -19,12 +20,17 @@ public class PlayerClone : MonoBehaviour
 
     //private variables have to be set in code, like Phaser's global variables
     private SpriteRenderer CloneSR;
+
+    private float initTime;
+    private bool isFlashing = false;
+
     // Use this for initialization
     void Start()
     {
         player = GameObject.Find("Player");
         //fill the SpriteRenderer variable with a reference to the SpriteRender on this GameObject
         CloneSR = GetComponent<SpriteRenderer>();
+        initTime = Time.timeSinceLevelLoad;
         Destroy(this.gameObject, PowerUpTime);
     }
 
@@ -33,6 +39,14 @@ public class PlayerClone : MonoBehaviour
     {
         //int for speed multiplier
         int speedMultiplier;
+
+        float timeSinceInit = Time.timeSinceLevelLoad - initTime;
+        Debug.Log(timeSinceInit);
+        if(timeSinceInit >= (PowerUpTime-2.5) && !isFlashing)
+        {
+            InvokeRepeating("StartFlashing", 0.0f, flashRate);
+            isFlashing = true;
+        }
 
         //Input.GetAxis lets you use arrows, WASD, joysticks, etc.
         //These are also mapped in the Input Manager (Edit->Project Settings->Input)
@@ -92,5 +106,17 @@ public class PlayerClone : MonoBehaviour
     public void OnDestroy()
     {
         player.SendMessage("ClearPowerUp");
+    }
+
+    public void StartFlashing()
+    {
+        if(CloneSR.enabled)
+        {
+            CloneSR.enabled = false;
+        }
+        else
+        {
+            CloneSR.enabled = true;
+        }
     }
 }

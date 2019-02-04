@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 
     public Sprite sadPlayerSprite;
     public Sprite happyPlayerSprite;
-    private List<Collider2D> ObjectsInRadius;
+    // private List<Collider2D> ObjectsInRadius;
     private ContactFilter2D contactFilter;
     private CircleCollider2D MagnetCollider;
     private int maxColliders = 15;
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour {
         MagnetCollider = GetComponent<CircleCollider2D>();
 
         contactFilter = new ContactFilter2D();
-        ObjectsInRadius = new List<Collider2D>();
+        // ObjectsInRadius = new List<Collider2D>();
     }
 	
 	// Update is called once per frame
@@ -84,21 +84,24 @@ public class Player : MonoBehaviour {
 
     void FixedUpdate()
     {
+        /*
         if(bHasMagnetPowerUp)
         {
             int numberofoverlaps = MagnetCollider.OverlapCollider(contactFilter, ObjectsInRadius);
             Debug.Log(numberofoverlaps);
+            foreach (Collider2D overlappingCollider in ObjectsInRadius)
+            {
+                //if(collider)
+                //{
+                //    Debug.Log("Collider Found");
+                //}
+                Vector3 ForceDirection = this.transform.position - overlappingCollider.gameObject.transform.position;
+                ForceDirection.Normalize();
+                overlappingCollider.gameObject.transform.position += ForceDirection * 3.0f;
+            }
         }
-        foreach(Collider2D overlappingCollider in ObjectsInRadius)
-        {
-            //if(collider)
-            //{
-            //    Debug.Log("Collider Found");
-            //}
-             Vector3 ForceDirection = this.transform.position - overlappingCollider.gameObject.transform.position;
-             ForceDirection.Normalize();
-             overlappingCollider.gameObject.transform.position += ForceDirection * 3.0f;
-        }
+        */
+        
     }
 
     //To receive the message 'HatCaught' we need to have a public function with that name
